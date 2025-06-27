@@ -31,7 +31,7 @@ class Eigen(Operation):
         for i in range(LQubits):
             op_list.append(qml.Hadamard(wires=i+offset_L))
         for i in range(LQubits):
-            if O == 'X':
+            if O == 'XX':
                 op_list.append(
                     qml.ctrl(
                         (
@@ -41,7 +41,7 @@ class Eigen(Operation):
                         )**(2**i), control=offset_U-1-i
                     )
                 )
-            elif O == 'Y':
+            elif O == 'YY':
                 op_list.append(
                     qml.ctrl(
                         (
@@ -51,7 +51,17 @@ class Eigen(Operation):
                         )**(2**i), control=offset_U-1-i
                     )
                 )
-            elif O == 'I':
+            elif O == 'YZ':
+                op_list.append(
+                    qml.ctrl(
+                        (
+                            qml.ctrl(qml.Z(offset_U)@qml.Z(offset_U+1), control=IndexQubits)@
+                            qml.ctrl(qml.Z(offset_U)@qml.Z(offset_U+1), control=IndexQubits+1)
+                            @(qml.PauliZ(wires=offset_U)@qml.PauliZ(wires=offset_U+1))
+                        )**(2**i), control=offset_U-1-i
+                    )
+                )
+            elif O == 'II':
                 op_list.append(
                     qml.ctrl(
                         (
